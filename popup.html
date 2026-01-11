@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twitch Chat Panorama</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 280px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #1f1f23 0%, #18181b 100%);
+      color: #efeff1;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .header-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #9146ff 0%, #772ce8 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+    }
+
+    h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #efeff1;
+    }
+
+    .description {
+      font-size: 12px;
+      color: #adadb8;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #3d3d45;
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background: linear-gradient(135deg, #9146ff 0%, #772ce8 100%);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: rgba(145, 70, 255, 0.1);
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3d3d45;
+      transition: background 0.3s;
+    }
+
+    .status-dot.active {
+      background: #00c853;
+      box-shadow: 0 0 8px rgba(0, 200, 83, 0.5);
+    }
+
+    .status-text {
+      font-size: 12px;
+      color: #adadb8;
+    }
+
+    .info {
+      font-size: 11px;
+      color: #71717a;
+      text-align: center;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .preview {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .preview-item {
+      flex: 1;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .preview-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .preview-item.active {
+      border-color: #9146ff;
+    }
+
+    .preview-icon {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 6px;
+    }
+
+    .preview-icon.side-by-side {
+      flex-direction: row;
+    }
+
+    .preview-video {
+      background: #3d3d45;
+      border-radius: 2px;
+    }
+
+    .preview-chat {
+      background: #9146ff;
+      border-radius: 2px;
+    }
+
+    .preview-icon.side-by-side .preview-video {
+      width: 60%;
+      height: 24px;
+    }
+
+    .preview-icon.side-by-side .preview-chat {
+      width: 40%;
+      height: 24px;
+    }
+
+    .preview-icon.panorama .preview-video {
+      width: 100%;
+      height: 16px;
+    }
+
+    .preview-icon.panorama .preview-chat {
+      width: 100%;
+      height: 10px;
+    }
+
+    .preview-label {
+      font-size: 10px;
+      text-align: center;
+      color: #adadb8;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4h16v12H4V4zm0 14h16v2H4v-2zm2-12v8h12V6H6z"/>
+      </svg>
+    </div>
+    <h1>Twitch Chat Panorama</h1>
+  </div>
+
+  <p class="description">
+    Toggle chat position between side-by-side and below the video for a panoramic viewing experience.
+  </p>
+
+  <div class="preview">
+    <div class="preview-item" id="preview-side">
+      <div class="preview-icon side-by-side">
+        <div class="preview-video"></div>
+        <div class="preview-chat"></div>
+      </div>
+      <div class="preview-label">Side by Side</div>
+    </div>
+    <div class="preview-item" id="preview-panorama">
+      <div class="preview-icon panorama">
+        <div class="preview-video"></div>
+        <div class="preview-chat"></div>
+      </div>
+      <div class="preview-label">Below Video</div>
+    </div>
+  </div>
+
+  <div class="toggle-container">
+    <span class="toggle-label">Panorama Mode</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="toggle">
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="status">
+    <div class="status-dot" id="status-dot"></div>
+    <span class="status-text" id="status-text">Checking status...</span>
+  </div>
+
+  <p class="info">Works on Twitch stream pages</p>
+
+  <script src="popup.js"></script>
+</body>
+</html>

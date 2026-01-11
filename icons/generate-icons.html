@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Extension Icons</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #1f1f23;
+      color: #efeff1;
+    }
+    h1 { color: #9146ff; }
+    .icon-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .icon-box {
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #3d3d45;
+      border-radius: 4px;
+    }
+    a {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 16px;
+      background: #9146ff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    a:hover { background: #772ce8; }
+    .instructions {
+      background: rgba(145, 70, 255, 0.1);
+      padding: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    code {
+      background: #3d3d45;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Twitch Chat Panorama - Icon Generator</h1>
+
+  <div class="instructions">
+    <p><strong>Instructions:</strong></p>
+    <ol>
+      <li>Right-click each icon below and select "Save image as..."</li>
+      <li>Save them in the <code>icons</code> folder with the correct filenames</li>
+      <li>Filenames: <code>icon16.png</code>, <code>icon48.png</code>, <code>icon128.png</code></li>
+    </ol>
+  </div>
+
+  <div class="icon-container">
+    <div class="icon-box">
+      <canvas id="icon16" width="16" height="16"></canvas>
+      <br><a id="download16" download="icon16.png">Download 16x16</a>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon48" width="48" height="48"></canvas>
+      <br><a id="download48" download="icon48.png">Download 48x48</a>
+    </div>
+    <div class="icon-box">
+      <canvas id="icon128" width="128" height="128"></canvas>
+      <br><a id="download128" download="icon128.png">Download 128x128</a>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(canvas) {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const scale = size / 128;
+
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#9146ff');
+      gradient.addColorStop(1, '#772ce8');
+
+      // Rounded rectangle background
+      ctx.beginPath();
+      const radius = 24 * scale;
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.quadraticCurveTo(size, 0, size, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.quadraticCurveTo(size, size, size - radius, size);
+      ctx.lineTo(radius, size);
+      ctx.quadraticCurveTo(0, size, 0, size - radius);
+      ctx.lineTo(0, radius);
+      ctx.quadraticCurveTo(0, 0, radius, 0);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // Video area (top)
+      ctx.fillStyle = '#1f1f23';
+      roundRect(ctx, 16 * scale, 20 * scale, 96 * scale, 48 * scale, 4 * scale);
+
+      // Chat area (bottom)
+      ctx.fillStyle = '#18181b';
+      roundRect(ctx, 16 * scale, 76 * scale, 96 * scale, 32 * scale, 4 * scale);
+
+      // Chat lines
+      ctx.fillStyle = 'rgba(145, 70, 255, 0.7)';
+      roundRect(ctx, 24 * scale, 84 * scale, 56 * scale, 4 * scale, 2 * scale);
+
+      ctx.fillStyle = 'rgba(145, 70, 255, 0.5)';
+      roundRect(ctx, 24 * scale, 92 * scale, 72 * scale, 4 * scale, 2 * scale);
+
+      ctx.fillStyle = 'rgba(145, 70, 255, 0.3)';
+      roundRect(ctx, 24 * scale, 100 * scale, 48 * scale, 4 * scale, 2 * scale);
+
+      // Play button
+      ctx.fillStyle = '#9146ff';
+      ctx.beginPath();
+      ctx.moveTo(56 * scale, 36 * scale);
+      ctx.lineTo(56 * scale, 52 * scale);
+      ctx.lineTo(72 * scale, 44 * scale);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.fill();
+    }
+
+    // Generate all icons
+    ['icon16', 'icon48', 'icon128'].forEach(id => {
+      const canvas = document.getElementById(id);
+      drawIcon(canvas);
+
+      const size = id.replace('icon', '');
+      const link = document.getElementById('download' + size);
+      link.href = canvas.toDataURL('image/png');
+    });
+  </script>
+</body>
+</html>

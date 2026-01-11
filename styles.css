@@ -1,0 +1,343 @@
+/* Twitch Chat Panorama - Move chat below video */
+
+/* ============================================ */
+/* CSS Variables */
+/* ============================================ */
+
+body.twitch-chat-panorama-enabled {
+  --tcp-chat-height: 300px;
+  --tcp-nav-height: 50px;
+}
+
+/* ============================================ */
+/* PANORAMA LAYOUT CONTAINER */
+/* ============================================ */
+
+.tcp-panorama-container {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  height: calc(100vh - var(--tcp-nav-height)) !important;
+  width: 100vw !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Hide other children in the container EXCEPT video/chat/sidebar */
+.tcp-panorama-container > *:not(.tcp-video-section):not(.tcp-chat-section):not(.side-bar-contents):not([class*="side-nav"]):not([class*="side-bar"]) {
+  display: none !important;
+}
+
+/* ============================================ */
+/* VIDEO SECTION */
+/* ============================================ */
+
+.tcp-video-section {
+  width: 100% !important;
+  flex: 0 0 50vh !important;
+  height: 50vh !important;
+  max-height: 50vh !important;
+  order: 1 !important;
+  overflow: hidden !important;
+  position: relative !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* The persistent player fills the video section absolutely */
+.tcp-video-section .persistent-player,
+body.twitch-chat-panorama-enabled .persistent-player {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.twitch-chat-panorama-enabled .persistent-player > div,
+body.twitch-chat-panorama-enabled .video-player,
+body.twitch-chat-panorama-enabled .video-player__container {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+body.twitch-chat-panorama-enabled video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+/* ============================================ */
+/* CHAT SECTION */
+/* ============================================ */
+
+.tcp-chat-section {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: 50vh !important;
+  min-height: 50vh !important;
+  max-height: 50vh !important;
+  flex: 0 0 50vh !important;
+  order: 2 !important;
+  overflow: visible !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
+}
+
+/* Remove the translateX that Twitch applies to the right column */
+.tcp-chat-section .channel-root__right-column,
+.tcp-chat-section [class*="channel-root__right-column"],
+body.twitch-chat-panorama-enabled .channel-root__right-column,
+body.twitch-chat-panorama-enabled [class*="channel-root__right-column"] {
+  transform: none !important;
+  transition: none !important;
+  overflow: visible !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Ensure chat section children are interactive */
+.tcp-chat-section * {
+  pointer-events: auto !important;
+}
+
+/* ============================================ */
+/* CHAT INNER ELEMENTS - Force full height */
+/* ============================================ */
+
+/* All direct children of chat section */
+.tcp-chat-section > * {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Right column - the container for chat */
+.tcp-chat-section .right-column,
+.tcp-chat-section [class*="right-column"],
+body.twitch-chat-panorama-enabled .right-column {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Chat shell */
+body.twitch-chat-panorama-enabled .chat-shell {
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Stream chat wrapper */
+body.twitch-chat-panorama-enabled .stream-chat {
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Chat room section */
+body.twitch-chat-panorama-enabled .chat-room,
+body.twitch-chat-panorama-enabled section.chat-room {
+  width: 100% !important;
+  height: 100% !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Chat room content area */
+body.twitch-chat-panorama-enabled .chat-room__content {
+  flex: 1 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+/* Chat list wrapper */
+body.twitch-chat-panorama-enabled .chat-list,
+body.twitch-chat-panorama-enabled .chat-list--default,
+body.twitch-chat-panorama-enabled .chat-list--other {
+  flex: 1 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* The scrollable container that holds messages */
+body.twitch-chat-panorama-enabled .chat-scrollable-area__message-container,
+body.twitch-chat-panorama-enabled [class*="chat-scrollable-area"] {
+  flex: 1 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+}
+
+/* Twitch's scrollable-area component */
+body.twitch-chat-panorama-enabled .scrollable-area {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: 100% !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure the chat list container can scroll */
+body.twitch-chat-panorama-enabled .chat-list--default,
+body.twitch-chat-panorama-enabled .chat-list--other {
+  overflow: visible !important;
+}
+
+/* Simplebar wrapper if used */
+body.twitch-chat-panorama-enabled .simplebar-scroll-content,
+body.twitch-chat-panorama-enabled .simplebar-content {
+  height: 100% !important;
+}
+
+/* Chat input stays at bottom */
+body.twitch-chat-panorama-enabled .chat-input {
+  flex-shrink: 0 !important;
+  width: 100% !important;
+}
+
+/* Force chat container to fill full width - remove right side blank space */
+body.twitch-chat-panorama-enabled .chat-shell,
+body.twitch-chat-panorama-enabled .stream-chat,
+body.twitch-chat-panorama-enabled .chat-room,
+body.twitch-chat-panorama-enabled .chat-room__content,
+body.twitch-chat-panorama-enabled .chat-list,
+body.twitch-chat-panorama-enabled .right-column,
+body.twitch-chat-panorama-enabled .right-column__toggle-visibility,
+body.twitch-chat-panorama-enabled [class*="right-column"] {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  flex-basis: 100% !important;
+  flex-grow: 1 !important;
+}
+
+/* Remove any fixed width constraints on the right column */
+body.twitch-chat-panorama-enabled .right-column--collapsed,
+body.twitch-chat-panorama-enabled .right-column--expanded,
+body.twitch-chat-panorama-enabled .Layout-sc-1xcs6mc-0 [class*="right-column"],
+body.twitch-chat-panorama-enabled div[class*="right-column"] {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  flex: 1 1 100% !important;
+}
+
+/* Override Twitch's fixed 340px width on right column */
+.tcp-chat-section [style*="width"],
+.tcp-chat-section .right-column,
+body.twitch-chat-panorama-enabled .right-column {
+  width: 100% !important;
+}
+
+/* Chat header */
+body.twitch-chat-panorama-enabled .stream-chat-header {
+  flex-shrink: 0 !important;
+}
+
+/* ============================================ */
+/* LEFT SIDEBAR - Keep it in place */
+/* ============================================ */
+
+body.twitch-chat-panorama-enabled .side-bar-contents,
+body.twitch-chat-panorama-enabled .side-nav,
+body.twitch-chat-panorama-enabled #side-nav,
+body.twitch-chat-panorama-enabled [class*="side-bar-contents"] {
+  display: block !important;
+  position: fixed !important;
+  left: 0 !important;
+  top: var(--tcp-nav-height) !important;
+  height: calc(100vh - var(--tcp-nav-height)) !important;
+  z-index: 100 !important;
+}
+
+/* ============================================ */
+/* HIDE ELEMENTS */
+/* ============================================ */
+
+/* Hide the collapse button and its container - it covers the chat */
+body.twitch-chat-panorama-enabled [data-a-target="right-column__toggle-collapse-btn"],
+body.twitch-chat-panorama-enabled .right-column__toggle-visibility,
+body.twitch-chat-panorama-enabled [class*="toggle-visibility__right-column"] {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hide stream info/description panel below video */
+body.twitch-chat-panorama-enabled [data-a-target="stream-game-link"],
+body.twitch-chat-panorama-enabled [class*="channel-info-content"],
+body.twitch-chat-panorama-enabled [class*="metadata-layout"],
+body.twitch-chat-panorama-enabled [class*="stream-info-card"],
+body.twitch-chat-panorama-enabled [class*="about-section"],
+body.twitch-chat-panorama-enabled [data-a-target="about-panel"],
+body.twitch-chat-panorama-enabled [class*="channel-panels"],
+body.twitch-chat-panorama-enabled .channel-info-content,
+body.twitch-chat-panorama-enabled .home-header-sticky,
+body.twitch-chat-panorama-enabled [class*="StreamInfoBar"],
+body.twitch-chat-panorama-enabled [class*="stream-info"] {
+  display: none !important;
+}
+
+/* Hide the streamer info bar (name, buttons, viewer count) */
+body.twitch-chat-panorama-enabled [class*="channel-header"],
+body.twitch-chat-panorama-enabled [data-target="channel-header-right"] {
+  display: none !important;
+}
+
+/* Hide "About", "Schedule", etc. tabs and content below video */
+body.twitch-chat-panorama-enabled [class*="home-tabs"],
+body.twitch-chat-panorama-enabled [role="tablist"],
+body.twitch-chat-panorama-enabled [role="tabpanel"] {
+  display: none !important;
+}
+
+/* Hide any section with "About" in the heading */
+body.twitch-chat-panorama-enabled section:has(h2:contains("About")),
+body.twitch-chat-panorama-enabled div:has(> [class*="about"]) {
+  display: none !important;
+}
+
+/* Hide the entire lower section wrapper */
+body.twitch-chat-panorama-enabled .tcp-video-section ~ *:not(.tcp-chat-section) {
+  display: none !important;
+}
+
+/* ============================================ */
+/* RESPONSIVE */
+/* ============================================ */
+
+@media (max-height: 800px) {
+  body.twitch-chat-panorama-enabled {
+    --tcp-chat-height: 250px;
+  }
+}
+
+@media (max-height: 600px) {
+  body.twitch-chat-panorama-enabled {
+    --tcp-chat-height: 200px;
+  }
+}
