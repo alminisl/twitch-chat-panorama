@@ -183,27 +183,25 @@ body.twitch-chat-panorama-enabled .chat-list--other {
   flex-direction: column !important;
 }
 
-/* The scrollable container that holds messages */
-body.twitch-chat-panorama-enabled .chat-scrollable-area__message-container,
-body.twitch-chat-panorama-enabled [class*="chat-scrollable-area"] {
+/* The scrollable container that holds messages - don't override overflow, let Twitch handle it */
+body.twitch-chat-panorama-enabled .chat-scrollable-area__message-container {
   flex: 1 !important;
   min-height: 0 !important;
-  height: 100% !important;
-  overflow-y: auto !important;
 }
 
-/* Twitch's scrollable-area component */
-body.twitch-chat-panorama-enabled .scrollable-area {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+/* Twitch's scrollable-area component - preserve native scroll behavior */
+body.twitch-chat-panorama-enabled .scrollable-area[data-a-target="chat-scroller"] {
   height: 100% !important;
   pointer-events: auto !important;
+  position: relative !important;
 }
 
-/* Ensure the chat list container can scroll */
+/* Ensure the chat list container has proper height */
 body.twitch-chat-panorama-enabled .chat-list--default,
 body.twitch-chat-panorama-enabled .chat-list--other {
-  overflow: visible !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  position: relative !important;
 }
 
 /* Simplebar wrapper if used */
@@ -285,6 +283,11 @@ body.twitch-chat-panorama-enabled [class*="toggle-visibility__right-column"] {
   width: 0 !important;
   height: 0 !important;
   pointer-events: none !important;
+}
+
+/* Hide the viewer card layer */
+body.twitch-chat-panorama-enabled .viewer-card-layer {
+  display: none !important;
 }
 
 /* Hide stream info/description panel below video */
